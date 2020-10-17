@@ -1,0 +1,3 @@
+-- DROP ALL TABLES SHORTCUT- sequence of 2 commands
+--mysqldump --add-drop-table --no-data -u root -p acquirer | grep 'DROP TABLE'  > drop_all_tables.sql
+--mysql -u root -p acquirer < drop_all_tables.sql

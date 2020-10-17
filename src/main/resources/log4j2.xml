@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration strict="true">
+
+	<Properties>
+		<Property name="baseDir">~/log/location</Property>
+		<Property name="prefix">location</Property>
+	</Properties>
+
+	<Appenders>
+
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} - %X{mdcKey} [%t] %-5p %c{1}:%L - %msg%n%n" />
+		</Console>
+
+		<RollingRandomAccessFile name="MONITORING_METRICS" fileName="${baseDir}/${prefix}_monitoring.log"
+								 filePattern="${baseDir}/archive/${prefix}_monitoring_%d{yyyy-MM-dd-HH}-%i.log.gz" >
+			<DefaultRolloverStrategy max="200"/>
+			<PatternLayout>
+				<pattern>
+					%d{yyyy-MM-dd HH:mm:ss.SSS} - %X{mdcKey} -%X{request-id} - %msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"/>
+				<SizeBasedTriggeringPolicy size="1 GB" />
+			</Policies>
+		</RollingRandomAccessFile>
+
+		<RollingRandomAccessFile name="HIKARI_MONITORING_METRICS" fileName="${baseDir}/${prefix}_hikari_monitoring.log"
+								 filePattern="${baseDir}/archive/${prefix}_hikari_monitoring_%d{yyyy-MM-dd-HH}-%i.log.gz" >
+			<DefaultRolloverStrategy max="200"/>
+			<PatternLayout>
+				<pattern>
+					%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"/>
+				<SizeBasedTriggeringPolicy size="1 GB" />
+			</Policies>
+		</RollingRandomAccessFile>
+
+		<RollingRandomAccessFile name="DEBUG_FILE"
+			fileName="${baseDir}/${prefix}_debug.log"
+			filePattern="${baseDir}/archive/${prefix}_debug_%d{yyyy-MM-dd}_%i.log.gz">
+			<DefaultRolloverStrategy max="200" />
+			<PatternLayout>
+				<pattern>
+					%d{yyyy-MM-dd HH:mm:ss.SSS} -%X{mdcKey} [%t] %-5p %c{1}:%L - %msg%n%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="1 GB" />
+			</Policies>
+		</RollingRandomAccessFile>
+
+		<RollingRandomAccessFile name="APP_FILE"
+			fileName="${baseDir}/${prefix}_application.log"
+			filePattern="${baseDir}/archive/${prefix}_application_%d{yyyy-MM-dd-HH}_%i.log.gz">
+			<DefaultRolloverStrategy max="200" />
+			<JSONLayout  properties="true" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="1 GB" />
+			</Policies>
+		</RollingRandomAccessFile>
+
+
+
+	</Appenders>
+
+	<Loggers>
+
+        <AsyncLogger name="org.springframework" level="info" additivity="false">
+            <AppenderRef ref="APP_FILE" />
+        </AsyncLogger>
+
+		<Root level="info">
+			<AppenderRef ref="APP_FILE" />
+			<AppenderRef ref="DEBUG_FILE" />
+			<AppenderRef ref="Console" />
+		</Root>
+
+		<AsyncLogger name="MonitoringLogger" level="info" additivity="false">
+			<AppenderRef ref="MONITORING_METRICS"/>
+		</AsyncLogger>
+
+		<AsyncLogger name="HikariMonitoringLogger" level="debug" additivity="false">
+			<AppenderRef ref="HIKARI_MONITORING_METRICS"/>
+		</AsyncLogger>
+
+	</Loggers>
+
+</Configuration>
