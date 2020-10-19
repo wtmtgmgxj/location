@@ -1,15 +1,13 @@
 package com.wdf.location.exceptions.technical;
 
 import com.wdf.location.exceptions.AbstractException;
-import com.wdf.location.response.RespCodes.RespCode;
-import lombok.Data;
+import com.wdf.location.response.ResponseCodes;
 
-@Data
 public class TechnicalException extends AbstractException {
 
-	private RespCode respCode;
+	private ResponseCodes respCode;
 
-	public TechnicalException(RespCode s) {
+	public TechnicalException(ResponseCodes s) {
 		super(s);
 		this.respCode = s;
 	}
@@ -19,7 +17,7 @@ public class TechnicalException extends AbstractException {
 	}
 
 	@Override
-	public RespCode code() {
+	public ResponseCodes code() {
 		return respCode;
 	}
 

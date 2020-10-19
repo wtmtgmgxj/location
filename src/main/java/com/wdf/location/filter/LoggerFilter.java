@@ -29,7 +29,7 @@ public class LoggerFilter extends OncePerRequestFilter {
 
 	protected void populateMDC(HttpServletRequest request) {
 
-		String mdcValue = request.getParameter(ApplicationConstants.TRACER);
+		String mdcValue = request.getParameter(request.getHeader("X-Request-ID"));
 
 		if (StringUtils.isBlank(mdcValue)) {
 			String permittedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

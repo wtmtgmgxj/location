@@ -29,7 +29,7 @@ public class Controller {
 
 	@RequestMapping(value = { "/" + APPLICATION_NAME + "/add" }, method = { RequestMethod.PUT },
 			consumes = { "application/json" })
-	public @ResponseBody AddResponse add(@Validated @RequestBody AddRequest request, @RequestParam String tracer,
+	public @ResponseBody AddResponse add(@Validated @RequestBody AddRequest request,
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
 
 		// headers: X-User-ID; X-Request-ID; Date; X-Client-ID
@@ -37,7 +37,7 @@ public class Controller {
 		// TODO @DV what is the use of tracer?
 
 		request.setHeaders(headers);
-		request.setTracer(tracer);
+		request.setTracer(headers.get("X-Request-ID"));
 		request.setRequestTimestamp(requestTimestamp);
 
 		addValidator.validate(request);

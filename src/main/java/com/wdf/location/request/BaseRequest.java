@@ -12,7 +12,7 @@ public abstract class BaseRequest {
 	// QUERY PARAMS
 	private Long requestTimestamp;
 
-	private String tracer;
+	private String tracer; // X-Request-ID
 
 	// language handled by gateway at Kong level
 	// private String language;

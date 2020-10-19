@@ -1,0 +1,7 @@
+package com.wdf.location.response;
+
+public enum ResponseCodes {
+
+	OK, INTERNAL_SERVER_ERROR, INVALID_LEVEL_FOR_A_CHILD, BLANK_NAME, BLANK_TYPE, EMPTY_TAG_LIST, BLANK_STATUS, ILLEGAL_STATUS_VALUE
+
+}

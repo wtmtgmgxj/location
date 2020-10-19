@@ -1,15 +1,15 @@
 package com.wdf.location.exceptions;
 
-import com.wdf.location.response.RespCodes.RespCode;
+import com.wdf.location.response.ResponseCodes;
 import lombok.Data;
 
 @Data
 public abstract class AbstractException extends RuntimeException {
 
-	public AbstractException(RespCode s) {
+	public AbstractException(ResponseCodes s) {
 		super(s.name());
 	}
 
-	public abstract RespCode code();
+	public abstract ResponseCodes code();
 
 }

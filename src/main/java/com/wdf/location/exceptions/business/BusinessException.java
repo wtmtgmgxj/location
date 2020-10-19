@@ -1,13 +1,13 @@
 package com.wdf.location.exceptions.business;
 
 import com.wdf.location.exceptions.AbstractException;
-import com.wdf.location.response.RespCodes;
+import com.wdf.location.response.ResponseCodes;
 
 public class BusinessException extends AbstractException {
 
-	private RespCodes.RespCode respCode;
+	private ResponseCodes respCode;
 
-	public BusinessException(RespCodes.RespCode s) {
+	public BusinessException(ResponseCodes s) {
 		super(s);
 		this.respCode = s;
 	}
@@ -17,7 +17,7 @@ public class BusinessException extends AbstractException {
 	}
 
 	@Override
-	public RespCodes.RespCode code() {
+	public ResponseCodes code() {
 		return respCode;
 	}
 
