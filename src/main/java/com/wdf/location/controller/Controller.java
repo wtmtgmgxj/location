@@ -27,10 +27,15 @@ public class Controller {
 	@Autowired
 	private UpdateService updateService;
 
-	@RequestMapping(value = { "/" + APPLICATION_NAME + "/add" }, method = { RequestMethod.POST },
+	@RequestMapping(value = { "/" + APPLICATION_NAME + "/add" }, method = { RequestMethod.PUT },
 			consumes = { "application/json" })
 	public @ResponseBody AddResponse add(@Validated @RequestBody AddRequest request, @RequestParam String tracer,
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
+
+		// headers: X-User-ID; X-Request-ID; Date; X-Client-ID
+
+		// TODO @DV what is the use of tracer?
+
 		request.setHeaders(headers);
 		request.setTracer(tracer);
 		request.setRequestTimestamp(requestTimestamp);

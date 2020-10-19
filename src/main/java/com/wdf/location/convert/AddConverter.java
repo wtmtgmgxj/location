@@ -8,7 +8,10 @@ import org.springframework.stereotype.Component;
 public class AddConverter {
 
 	public Location convert(AddRequest request) {
-		return new Location();
+		Location location = new Location();
+		location.setLastUpdatedBy(request.getHeaders().get("X-User-ID"));
+		// all setters
+		return location;
 	}
 
 }
