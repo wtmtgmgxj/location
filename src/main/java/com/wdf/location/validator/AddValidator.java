@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
 public class AddValidator {
 
 	public void validate(AddRequest request) {
-		// throw new RuntimeException();
+
 		validateNonNullableFields(request);
 		validateEnums(request);
 		validateGeoLocation(request.getGeoLocation());

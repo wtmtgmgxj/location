@@ -34,8 +34,6 @@ public class Controller {
 
 		// headers: X-User-ID; X-Request-ID; Date; X-Client-ID
 
-		// TODO @DV what is the use of tracer?
-
 		request.setHeaders(headers);
 		request.setTracer(headers.get("X-Request-ID"));
 		request.setRequestTimestamp(requestTimestamp);

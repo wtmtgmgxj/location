@@ -15,4 +15,8 @@ public class LocationDataService {
 		locationMasterRepository.save(location);
 	}
 
+	public Location findByUid(String uid) {
+		return locationMasterRepository.findByUid(uid);
+	}
+
 }

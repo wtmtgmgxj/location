@@ -5,4 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface LocationMasterRepository extends CrudRepository<Location, Long> {
 
+	Location findByUid(String uid);
+
 }

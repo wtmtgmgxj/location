@@ -27,6 +27,8 @@ public class Location {
 
 	private JsonNode children; // nullable: {"list": [uuid-1,uuid-2,uuid-3]}
 
+	private String uid; // unique uuid
+
 	private int level;
 
 	private String lastUpdatedBy; // X-User-ID header
