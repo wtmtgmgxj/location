@@ -1,6 +1,5 @@
 package com.wdf.location.controller;
 
-import com.wdf.location.request.AddRequest;
 import com.wdf.location.response.BaseResponse;
 import com.wdf.location.response.GetResponse;
 import com.wdf.location.response.PostResponse;
@@ -75,14 +74,13 @@ public class InternalController {
 	@ApiOperation(value = "update location", notes = "This api will give update location")
 	@RequestMapping(value = { "/" + APPLICATION_NAME + "/{id}" }, method = { RequestMethod.PATCH },
 			consumes = { "application/json" })
-	public @ResponseBody BaseResponse<PostResponse> updateLocation(@RequestParam AddRequest location,
+	public @ResponseBody BaseResponse updateLocation(@PathVariable String id,
+			@RequestParam(required = false) String name, @RequestParam(required = false) String tag,
+			@RequestParam(required = false) String imageUrl,@RequestParam(required = false) String geoLocation,
+			 @RequestParam(required = false) String type,
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
 
-		// headers: X-User-ID; X-Request-ID; Date; X-Client-ID
-
-		return null;
-
-		// return updateService.updateLocation(headers.get("X-User-ID"),location);
+		 return updateService.updateLocation(headers.get("X-User-ID"),id,name,tag,imageUrl,geoLocation,type);
 
 	}
 

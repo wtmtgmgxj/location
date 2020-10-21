@@ -15,9 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UpdateService extends BaseService<PostResponse> {
@@ -45,12 +43,19 @@ public class UpdateService extends BaseService<PostResponse> {
 	}
 
 	public BaseResponse club(String userID, String idA, String idB) {
+
 		Location locationA = locationDataService.findByUid(idA);
 		Location locationB = locationDataService.findByUid(idB);
-		List<String> tagsA = ApplicationConstants.objectMapper.convertValue(locationA.getTags(), List.class);
-		List<String> tagsB = ApplicationConstants.objectMapper.convertValue(locationB.getTags(), List.class);
+
+		Map<String,List<String>> mapA = ApplicationConstants.objectMapper.convertValue(locationA.getTags(), HashMap.class);
+		Map<String,List<String>> mapB = ApplicationConstants.objectMapper.convertValue(locationB.getTags(), HashMap.class);
+
+		List<String> tagsA = mapA.get("tags");
+		List<String> tagsB = mapB.get("tags");
 		tagsA.addAll(tagsB);
-		locationA.setTags(ApplicationConstants.objectMapper.convertValue(tagsA, JsonNode.class));
+		mapA.put("tags",tagsA);
+
+		locationA.setTags(ApplicationConstants.objectMapper.convertValue(mapA, JsonNode.class));
 		locationB.setStatus(Status.INACTIVE.name());
 		List<Location> allLocation = new ArrayList<>();
 		allLocation.add(locationA);
@@ -64,7 +69,7 @@ public class UpdateService extends BaseService<PostResponse> {
 	}
 
 	public BaseResponse changeParent(String userID, String child, String newParent) {
-		// remove parent from child n child from parent.set child in new parent
+		// remove parent from child n child from parent.set child in new parent. level will be new parent level +1
 		List<String> allIds = new ArrayList<>();
 		allIds.add(child);
 		allIds.add(newParent);
@@ -88,6 +93,7 @@ public class UpdateService extends BaseService<PostResponse> {
 			}
 		}
 		childLocation.get().setParent(newParent);
+		childLocation.get().setLevel(newParentLocation.get().getLevel() + 1);
 		locationsToBeSaved.add(childLocation.get());
 		locationsToBeSaved.add(setChildren(newParentLocation.get(), childLocation.get().getUid(), Flow.ADD));
 		locationsToBeSaved.stream().forEach(x -> x.setLastUpdatedBy(userID));
@@ -127,4 +133,33 @@ public class UpdateService extends BaseService<PostResponse> {
 
 	}
 
+	public BaseResponse updateLocation(String userID, String id, String name, String tag,
+									   String imageUrl, String geoLocation, final String type) {
+		Location location = locationDataService.findByUid(id);
+
+		if(!StringUtils.isEmpty(name)){
+			location.setName(name);
+		}
+		if(!StringUtils.isEmpty(type)){
+			location.setType(type);
+		}
+		if(!StringUtils.isEmpty(imageUrl)){
+			location.setImageUrl(imageUrl);
+		}
+		if(!StringUtils.isEmpty(geoLocation)){
+			location.setGeoLocation(geoLocation);
+		}
+		if(!StringUtils.isEmpty(tag)){
+			Map<String,List<String>> map = ApplicationConstants.objectMapper.convertValue(location.getTags(), HashMap.class);
+			List<String> existingTags = map.get("tags");
+			if(!existingTags.stream().filter(x -> x.toUpperCase().equalsIgnoreCase(tag.toUpperCase())).findAny().isPresent()){
+				existingTags.add(tag);
+				map.put("tags",existingTags);
+				location.setTags(ApplicationConstants.objectMapper.convertValue(map,JsonNode.class));
+			}
+		}
+		location.setLastUpdatedBy(userID);
+		locationDataService.save(location);
+		return createSuccessResponse();
+	}
 }
