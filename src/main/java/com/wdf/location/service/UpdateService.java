@@ -1,8 +1,130 @@
 package com.wdf.location.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.wdf.location.constants.ApplicationConstants;
+import com.wdf.location.constants.Flow;
+import com.wdf.location.constants.Status;
+import com.wdf.location.datasource.dataservice.LocationDataService;
+import com.wdf.location.datasource.model.Location;
+import com.wdf.location.exceptions.business.BusinessException;
+import com.wdf.location.response.BaseResponse;
+import com.wdf.location.response.PostResponse;
+import com.wdf.location.response.ResponseCodes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
-public class UpdateService {
+public class UpdateService extends BaseService<PostResponse> {
+
+	@Autowired
+	private LocationDataService locationDataService;
+
+	public BaseResponse updateReportCount(String user, String id) {
+		Location location = locationDataService.findByUid(id);
+		location.setReportCount(location.getReportCount() + 1);
+		location.setLastUpdatedBy(user);
+		locationDataService.save(location);
+
+		return createSuccessResponse();
+	}
+
+	public BaseResponse<PostResponse> requestUpdate(String s) {
+
+		return null;
+	}
+
+	public BaseResponse<PostResponse> requestRemove(String s) {
+
+		return null;
+	}
+
+	public BaseResponse club(String userID, String idA, String idB) {
+		Location locationA = locationDataService.findByUid(idA);
+		Location locationB = locationDataService.findByUid(idB);
+		List<String> tagsA = ApplicationConstants.objectMapper.convertValue(locationA.getTags(), List.class);
+		List<String> tagsB = ApplicationConstants.objectMapper.convertValue(locationB.getTags(), List.class);
+		tagsA.addAll(tagsB);
+		locationA.setTags(ApplicationConstants.objectMapper.convertValue(tagsA, JsonNode.class));
+		locationB.setStatus(Status.INACTIVE.name());
+		List<Location> allLocation = new ArrayList<>();
+		allLocation.add(locationA);
+		allLocation.add(locationB);
+
+		allLocation.stream().forEach(x -> x.setLastUpdatedBy(userID));
+
+		locationDataService.saveAll(allLocation);
+
+		return createSuccessResponse();
+	}
+
+	public BaseResponse changeParent(String userID, String child, String newParent) {
+		// remove parent from child n child from parent.set child in new parent
+		List<String> allIds = new ArrayList<>();
+		allIds.add(child);
+		allIds.add(newParent);
+		List<Location> bothLocations = locationDataService.findAllByUidIn(allIds);
+		Optional<Location> childLocation = bothLocations.stream().filter(x -> x.getUid().equalsIgnoreCase(child))
+				.findFirst();
+		Optional<Location> newParentLocation = bothLocations.stream()
+				.filter(x -> x.getUid().equalsIgnoreCase(newParent)).findFirst();
+
+		if (ObjectUtils.isEmpty(childLocation))
+			throw new BusinessException(ResponseCodes.NO_CHILD_LOCATION_IN_DB);
+
+		if (ObjectUtils.isEmpty(newParentLocation))
+			throw new BusinessException(ResponseCodes.NO_PARENT_LOCATION_IN_DB);
+
+		List<Location> locationsToBeSaved = new ArrayList<>();
+		if (!StringUtils.isEmpty(newParentLocation)) {
+			Location oldParent = locationDataService.findByUid(childLocation.get().getParent());
+			if (!ObjectUtils.isEmpty(oldParent)) {
+				locationsToBeSaved.add(setChildren(oldParent, childLocation.get().getUid(), Flow.DELETE));
+			}
+		}
+		childLocation.get().setParent(newParent);
+		locationsToBeSaved.add(childLocation.get());
+		locationsToBeSaved.add(setChildren(newParentLocation.get(), childLocation.get().getUid(), Flow.ADD));
+		locationsToBeSaved.stream().forEach(x -> x.setLastUpdatedBy(userID));
+
+		locationDataService.saveAll(locationsToBeSaved);
+		return createSuccessResponse();
+	}
+
+	public BaseResponse removeLocation(String userID, String id) {
+		// remove location from its parents row also. then delete it
+
+		List<Location> locationsToBeSaved = new ArrayList<>();
+
+		Location location = locationDataService.findByUid(id);
+		Location parentLocation = locationDataService.findByUid(location.getParent());
+		location.setStatus(Status.INACTIVE.name());
+		locationsToBeSaved.add(location);
+		locationsToBeSaved.add(setChildren(parentLocation, location.getUid(), Flow.DELETE));
+
+		locationsToBeSaved.stream().forEach(x -> x.setLastUpdatedBy(userID));
+
+		locationDataService.saveAll(locationsToBeSaved);
+		return createSuccessResponse();
+	}
+
+	public BaseResponse discardRequests(String userID, List<String> locationIdList) {
+
+		List<Location> locationsToBeSaved = locationDataService.findAllByUidIn(locationIdList);
+		locationsToBeSaved.stream().forEach(x -> {
+			x.setLastUpdatedBy(userID);
+			x.setRequests(null);
+			x.setReportCount(0);
+		});
+
+		locationDataService.saveAll(locationsToBeSaved);
+		return createSuccessResponse();
+
+	}
 
 }

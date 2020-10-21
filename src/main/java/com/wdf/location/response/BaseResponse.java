@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class BaseResponse {
+public class BaseResponse<T> {
 
 	private String respCode;
 
-	private String data;
+	private T data;
 
 	public BaseResponse(String respCode) {
 		this.respCode = respCode;
