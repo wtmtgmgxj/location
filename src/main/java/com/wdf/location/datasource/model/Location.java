@@ -37,7 +37,7 @@ public class Location {
 
 	private JsonNode tags; // If I am creating a record for Delhi, Tags will be the
 							// information of all the parents of Delhi, {"tags":
-							// [tag-1,tag-2,tag-3]}
+							// [tag-1,tag-2,tag-3]} + Delhi itself
 
 	// So tags will contain all of WORLD,ASIA,INDIA,DELHI
 	// So you have to fetch the Immediate Parent and copy its tag and add to it

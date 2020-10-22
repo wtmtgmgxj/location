@@ -15,7 +15,7 @@ public abstract class BaseService<T> {
 	BaseResponse<T> createSuccessResponse() {
 		BaseResponse response = new BaseResponse();
 		response.setRespCode(ResponseCodes.OK.name());
-		return new BaseResponse();
+		return response;
 	}
 
 	protected List<String> getChildren(Location parentLocation) {

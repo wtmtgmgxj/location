@@ -3,7 +3,7 @@ package com.wdf.location.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.wdf.location.constants.ApplicationConstants;
 import com.wdf.location.constants.Flow;
-import com.wdf.location.constants.Status;
+import com.wdf.location.datasource.LocationDBConstants;
 import com.wdf.location.datasource.dataservice.LocationDataService;
 import com.wdf.location.datasource.model.Location;
 import com.wdf.location.exceptions.business.BusinessException;
@@ -16,6 +16,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+
+import static com.wdf.location.datasource.LocationDBConstants.STATUS.INACTIVE;
 
 @Service
 public class UpdateService extends BaseService<PostResponse> {
@@ -56,7 +58,7 @@ public class UpdateService extends BaseService<PostResponse> {
 		mapA.put("tags",tagsA);
 
 		locationA.setTags(ApplicationConstants.objectMapper.convertValue(mapA, JsonNode.class));
-		locationB.setStatus(Status.INACTIVE.name());
+		locationB.setStatus(INACTIVE.name());
 		List<Location> allLocation = new ArrayList<>();
 		allLocation.add(locationA);
 		allLocation.add(locationB);
@@ -73,6 +75,7 @@ public class UpdateService extends BaseService<PostResponse> {
 		List<String> allIds = new ArrayList<>();
 		allIds.add(child);
 		allIds.add(newParent);
+		//TODO Whats the utility of adding allIDS in one object, JPA beneath the surface will hit multiple calls
 		List<Location> bothLocations = locationDataService.findAllByUidIn(allIds);
 		Optional<Location> childLocation = bothLocations.stream().filter(x -> x.getUid().equalsIgnoreCase(child))
 				.findFirst();
@@ -109,7 +112,7 @@ public class UpdateService extends BaseService<PostResponse> {
 
 		Location location = locationDataService.findByUid(id);
 		Location parentLocation = locationDataService.findByUid(location.getParent());
-		location.setStatus(Status.INACTIVE.name());
+		location.setStatus(INACTIVE.name());
 		locationsToBeSaved.add(location);
 		locationsToBeSaved.add(setChildren(parentLocation, location.getUid(), Flow.DELETE));
 

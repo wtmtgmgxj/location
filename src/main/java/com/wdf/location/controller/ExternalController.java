@@ -38,18 +38,19 @@ public class ExternalController {
 	@RequestMapping(value = { "/" + APPLICATION_NAME + "/add" }, method = { RequestMethod.PUT },
 			consumes = { "application/json" })
 	@ApiOperation(value = "Add location", notes = "This api adds location.")
+	//TODO explain why the BASE RESPONSE IS USING GENERICS HERE
 	public @ResponseBody BaseResponse<PostResponse> add(@Validated @RequestBody AddRequest request,
-			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
+			@RequestHeader Map<String, String> headers) {
 
 		// headers: X-User-ID; X-Request-ID; Date; X-Client-ID
 
 		request.setHeaders(headers);
 		request.setTracer(headers.get("X-Request-ID"));
-		request.setRequestTimestamp(requestTimestamp);
+//		request.setRequestTimestamp(requestTimestamp);
+		//TODO Request timestamp is now coming from HEADER named DATE
 
 		addValidator.validate(request);
 
-		request.setRequestTimestamp(requestTimestamp);
 		return addService.add(request);
 
 	}

@@ -1,38 +1,23 @@
 package com.wdf.location.validator;
 
-import com.wdf.location.constants.Status;
 import com.wdf.location.exceptions.business.BusinessException;
 import com.wdf.location.request.AddRequest;
 import com.wdf.location.response.ResponseCodes;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 @Component
 public class AddValidator {
 
 	public void validate(AddRequest request) {
-
+		//TODO Each Request must BREAK WITH 4XX if the required headers are not present
 		validateNonNullableFields(request);
-		validateEnums(request);
 		validateGeoLocation(request.getGeoLocation());
-
 	}
 
-	private void validateEnums(AddRequest request) {
-		// status has [ACTIVE,INACTIVE] as eligible values
-		// throws IllegalArgumentException -> runtimeException if not a valid enum.
 
-		try {
-			Status.valueOf(request.getStatus());
-		}
-		catch (IllegalArgumentException ex) {
-			throw new BusinessException(ResponseCodes.ILLEGAL_STATUS_VALUE);
-		}
-	}
 
 	private void validateNonNullableFields(AddRequest request) {
-		// except CHILDREN,IMAGE URL, GEOLOCATION rest are non nullable.
 
 		if (StringUtils.isEmpty(request.getName())) {
 			throw new BusinessException(ResponseCodes.BLANK_NAME);
@@ -44,16 +29,21 @@ public class AddValidator {
 		if (StringUtils.isEmpty(request.getType())) {
 			throw new BusinessException(ResponseCodes.BLANK_TYPE);
 		}
-		if (CollectionUtils.isEmpty(request.getTags())) {
-			throw new BusinessException(ResponseCodes.EMPTY_TAG_LIST);
-		}
-		if (StringUtils.isEmpty(request.getStatus())) {
-			throw new BusinessException(ResponseCodes.BLANK_STATUS);
-		}
+//		if (CollectionUtils.isEmpty(request.getTags())) {
+//			throw new BusinessException(ResponseCodes.EMPTY_TAG_LIST);
+//		}
+		//TODO : REQUEST CANNOT HAVE TAGS, Wrong validation
+
+
+//		if (StringUtils.isEmpty(request.getStatus())) {
+//			throw new BusinessException(ResponseCodes.BLANK_STATUS);
+//		}
+		//TODO : REQUEST CANNOT HAVE STATUS DUDE, Wrong validation
 	}
 
 	private void validateGeoLocation(String geoLocation) {
 		// TODO Google api se check or simple type check??
+		// NOT NECESSARY TO DO IT , let it be as is for now.
 	}
 
 }
