@@ -22,7 +22,7 @@ public class Advice {
 	@ResponseStatus(HttpStatus.OK)
 	@ExceptionHandler(BusinessException.class)
 	public BaseResponse handleException(BusinessException exception) {
-		return responseBuilder.baseResponse(exception);
+		return responseBuilder.baseResponse(exception.code());
 	}
 
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
