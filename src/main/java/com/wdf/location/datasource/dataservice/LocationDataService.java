@@ -35,7 +35,8 @@ public class LocationDataService {
 		return locationMasterRepository.findAllByUidIn(uidList);
 	}
 
-	//TODO GET RESPONSE IS BEING CALLED DIRECTLY FROM DATA SERVICE? WHATS THE USE OF CONVERTERS THEN?
+	// TODO GET RESPONSE IS BEING CALLED DIRECTLY FROM DATA SERVICE? WHATS THE USE OF
+	// CONVERTERS THEN?
 	public GetResponse get(String id, String userId) {
 
 		GetResponse response = new GetResponse();

@@ -17,16 +17,17 @@ public class AddService extends BaseService<PostResponse> {
 
 	@Autowired
 	AddConverter addConverter;
+
 	@Autowired
 	private LocationDataService locationDataService;
 
 	public BaseResponse add(AddRequest request) {
 
 		Location parentLocation = locationDataService.findByUid(request.getParent());
-		if (parentLocation==null)
+		if (parentLocation == null)
 			throw new BusinessException(NO_PARENT_LOCATION_IN_DB);
 
-		locationDataService.save(addConverter.convert(request,parentLocation));
+		locationDataService.save(addConverter.convert(request, parentLocation));
 
 		return createSuccessResponse();
 	}

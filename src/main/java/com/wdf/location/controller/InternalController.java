@@ -1,12 +1,13 @@
 package com.wdf.location.controller;
 
+import com.wdf.location.constants.Flow;
 import com.wdf.location.response.BaseResponse;
 import com.wdf.location.response.GetResponse;
 import com.wdf.location.response.PostResponse;
 import com.wdf.location.service.AddService;
 import com.wdf.location.service.GetService;
 import com.wdf.location.service.UpdateService;
-import com.wdf.location.validator.AddValidator;
+import com.wdf.location.validator.CommonValidator;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 import static com.wdf.location.constants.ApplicationConstants.APPLICATION_NAME;
 import static com.wdf.location.constants.ApplicationConstants.INTERNAL;
+import static com.wdf.location.constants.RequestHeader.USERID;
 
 @Slf4j
 @RestController(INTERNAL)
@@ -26,7 +28,7 @@ public class InternalController {
 	private AddService addService;
 
 	@Autowired
-	private AddValidator addValidator;
+	private CommonValidator addValidator;
 
 	@Autowired
 	private UpdateService updateService;
@@ -34,14 +36,17 @@ public class InternalController {
 	@Autowired
 	private GetService getService;
 
+	@Autowired
+	private CommonValidator validator;
+
 	@RequestMapping(value = { "/" + APPLICATION_NAME + "/club/{idA}/{idB}" }, method = { RequestMethod.PUT },
 			consumes = { "application/json" })
 	@ApiOperation(value = "Clubs location", notes = "This api clubs location.")
 	public @ResponseBody BaseResponse<PostResponse> club(@PathVariable String idA, @PathVariable String idB,
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
 
-		// headers: X-User-ID; X-Request-ID; Date; X-Client-ID
-		return updateService.club(headers.get("X-User-ID"), idA, idB);
+		validator.validate(null, headers, Flow.NONE);
+		return updateService.club(headers.get(USERID), idA, idB);
 
 	}
 
@@ -52,9 +57,9 @@ public class InternalController {
 			@PathVariable String newParent, @RequestParam Long requestTimestamp,
 			@RequestHeader Map<String, String> headers) {
 
-		// headers: X-User-ID; X-Request-ID; Date; X-Client-ID
+		validator.validate(null, headers, Flow.NONE);
 
-		return updateService.changeParent(headers.get("X-User-ID"), child, newParent);
+		return updateService.changeParent(headers.get(USERID), child, newParent);
 
 	}
 
@@ -64,10 +69,9 @@ public class InternalController {
 	public @ResponseBody BaseResponse<PostResponse> removeLocation(@PathVariable String id,
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
 
-		// headers: X-User-ID; X-Request-ID; Date; X-Client-ID
+		validator.validate(null, headers, Flow.NONE);
 
-		// remove location from its parents row also. then delete it
-		return updateService.removeLocation(headers.get("X-User-ID"), id);
+		return updateService.removeLocation(headers.get(USERID), id);
 
 	}
 
@@ -76,11 +80,13 @@ public class InternalController {
 			consumes = { "application/json" })
 	public @ResponseBody BaseResponse updateLocation(@PathVariable String id,
 			@RequestParam(required = false) String name, @RequestParam(required = false) String tag,
-			@RequestParam(required = false) String imageUrl,@RequestParam(required = false) String geoLocation,
-			 @RequestParam(required = false) String type,
-			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
+			@RequestParam(required = false) String imageUrl, @RequestParam(required = false) String geoLocation,
+			@RequestParam(required = false) String type, @RequestParam Long requestTimestamp,
+			@RequestHeader Map<String, String> headers) {
 
-		 return updateService.updateLocation(headers.get("X-User-ID"),id,name,tag,imageUrl,geoLocation,type);
+		validator.validate(null, headers, Flow.NONE);
+
+		return updateService.updateLocation(headers.get(USERID), id, name, tag, imageUrl, geoLocation, type);
 
 	}
 
@@ -90,9 +96,9 @@ public class InternalController {
 	public @ResponseBody BaseResponse<List<String>> getRequests(@PathVariable String x,
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
 
-		// headers: X-User-ID; X-Request-ID; Date; X-Client-ID
+		validator.validate(null, headers, Flow.NONE);
 
-		return getService.getRequests(headers.get("X-User-ID"), x);
+		return getService.getRequests(headers.get(USERID), x);
 
 	}
 
@@ -102,9 +108,9 @@ public class InternalController {
 	public @ResponseBody BaseResponse discardRequests(@RequestBody List<String> locationIdList,
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
 
-		// headers: X-User-ID; X-Request-ID; Date; X-Client-ID
+		validator.validate(null, headers, Flow.NONE);
 
-		return updateService.discardRequests(headers.get("X-User-ID"), locationIdList);
+		return updateService.discardRequests(headers.get(USERID), locationIdList);
 
 	}
 

@@ -3,7 +3,6 @@ package com.wdf.location.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.wdf.location.constants.ApplicationConstants;
 import com.wdf.location.constants.Flow;
-import com.wdf.location.datasource.LocationDBConstants;
 import com.wdf.location.datasource.dataservice.LocationDataService;
 import com.wdf.location.datasource.model.Location;
 import com.wdf.location.exceptions.business.BusinessException;
@@ -49,13 +48,15 @@ public class UpdateService extends BaseService<PostResponse> {
 		Location locationA = locationDataService.findByUid(idA);
 		Location locationB = locationDataService.findByUid(idB);
 
-		Map<String,List<String>> mapA = ApplicationConstants.objectMapper.convertValue(locationA.getTags(), HashMap.class);
-		Map<String,List<String>> mapB = ApplicationConstants.objectMapper.convertValue(locationB.getTags(), HashMap.class);
+		Map<String, List<String>> mapA = ApplicationConstants.objectMapper.convertValue(locationA.getTags(),
+				HashMap.class);
+		Map<String, List<String>> mapB = ApplicationConstants.objectMapper.convertValue(locationB.getTags(),
+				HashMap.class);
 
 		List<String> tagsA = mapA.get("tags");
 		List<String> tagsB = mapB.get("tags");
 		tagsA.addAll(tagsB);
-		mapA.put("tags",tagsA);
+		mapA.put("tags", tagsA);
 
 		locationA.setTags(ApplicationConstants.objectMapper.convertValue(mapA, JsonNode.class));
 		locationB.setStatus(INACTIVE.name());
@@ -71,11 +72,11 @@ public class UpdateService extends BaseService<PostResponse> {
 	}
 
 	public BaseResponse changeParent(String userID, String child, String newParent) {
-		// remove parent from child n child from parent.set child in new parent. level will be new parent level +1
+		// remove parent from child n child from parent.set child in new parent. level
+		// will be new parent level +1
 		List<String> allIds = new ArrayList<>();
 		allIds.add(child);
 		allIds.add(newParent);
-		//TODO Whats the utility of adding allIDS in one object, JPA beneath the surface will hit multiple calls
 		List<Location> bothLocations = locationDataService.findAllByUidIn(allIds);
 		Optional<Location> childLocation = bothLocations.stream().filter(x -> x.getUid().equalsIgnoreCase(child))
 				.findFirst();
@@ -136,33 +137,36 @@ public class UpdateService extends BaseService<PostResponse> {
 
 	}
 
-	public BaseResponse updateLocation(String userID, String id, String name, String tag,
-									   String imageUrl, String geoLocation, final String type) {
+	public BaseResponse updateLocation(String userID, String id, String name, String tag, String imageUrl,
+			String geoLocation, final String type) {
 		Location location = locationDataService.findByUid(id);
 
-		if(!StringUtils.isEmpty(name)){
+		if (!StringUtils.isEmpty(name)) {
 			location.setName(name);
 		}
-		if(!StringUtils.isEmpty(type)){
+		if (!StringUtils.isEmpty(type)) {
 			location.setType(type);
 		}
-		if(!StringUtils.isEmpty(imageUrl)){
+		if (!StringUtils.isEmpty(imageUrl)) {
 			location.setImageUrl(imageUrl);
 		}
-		if(!StringUtils.isEmpty(geoLocation)){
+		if (!StringUtils.isEmpty(geoLocation)) {
 			location.setGeoLocation(geoLocation);
 		}
-		if(!StringUtils.isEmpty(tag)){
-			Map<String,List<String>> map = ApplicationConstants.objectMapper.convertValue(location.getTags(), HashMap.class);
+		if (!StringUtils.isEmpty(tag)) {
+			Map<String, List<String>> map = ApplicationConstants.objectMapper.convertValue(location.getTags(),
+					HashMap.class);
 			List<String> existingTags = map.get("tags");
-			if(!existingTags.stream().filter(x -> x.toUpperCase().equalsIgnoreCase(tag.toUpperCase())).findAny().isPresent()){
+			if (!existingTags.stream().filter(x -> x.toUpperCase().equalsIgnoreCase(tag.toUpperCase())).findAny()
+					.isPresent()) {
 				existingTags.add(tag);
-				map.put("tags",existingTags);
-				location.setTags(ApplicationConstants.objectMapper.convertValue(map,JsonNode.class));
+				map.put("tags", existingTags);
+				location.setTags(ApplicationConstants.objectMapper.convertValue(map, JsonNode.class));
 			}
 		}
 		location.setLastUpdatedBy(userID);
 		locationDataService.save(location);
 		return createSuccessResponse();
 	}
+
 }

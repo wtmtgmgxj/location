@@ -1,5 +1,11 @@
 package com.wdf.location.datasource;
 
 public class LocationDBConstants {
-    public enum STATUS{ACTIVE,INACTIVE}
+
+	public enum STATUS {
+
+		ACTIVE, INACTIVE
+
+	}
+
 }

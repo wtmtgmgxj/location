@@ -1,11 +1,15 @@
 package com.wdf.location.convert;
 
-import com.wdf.location.datasource.LocationDBConstants;
-import com.wdf.location.datasource.dataservice.LocationDataService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.wdf.location.constants.ApplicationConstants;
 import com.wdf.location.datasource.model.Location;
 import com.wdf.location.request.AddRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static com.wdf.location.datasource.LocationDBConstants.STATUS.ACTIVE;
 
@@ -14,27 +18,25 @@ public class AddConverter {
 
 	public Location convert(AddRequest request, Location parentLocation) {
 
-		//TODO You forgot to set the ID , ChangeID to UUID
+		// TODO You forgot to set the ID , ChangeID to UUID
 		Location location = new Location();
 		location.setLastUpdatedBy(request.getHeaders().get("X-User-ID"));
 		location.setChildren(null);
+		location.setUid(UUID.randomUUID().toString());
 		location.setGeoLocation(request.getGeoLocation());
 		location.setImageUrl(request.getImageUrl());
 		location.setLastUpdatedBy(request.getHeaders().get("X-User-ID"));
-
-		//TODO NO DATABASE CALLS FROM CONVERTER, they shuld be from SERVICE
-//		Location parentLocation = locationDataService.findByUid(request.getParent());
-		//TODO : BUSINESS VALIDATION MISSING if parent==null throw BusinessException
-
 		location.setLevel(parentLocation.getLevel() + 1); // parent +1
-		location.setTags(parentLocation.getTags());
-		//TODO : location Tags=(TAGS of parent+ Current Location's name)
+
+		Map<String, List<String>> map = ApplicationConstants.objectMapper.convertValue(parentLocation.getTags(),
+				HashMap.class);
+		map.get("tags").add(request.getName());
+		location.setTags(ApplicationConstants.objectMapper.convertValue(map, JsonNode.class));
 
 		location.setName(request.getName());
 		location.setParent(request.getParent());
-//		location.setReportCount(request.getReportCount());
-//		location.setRequests(request.getRequests());
-		//TODO WHEN WE ARE CREATING A NEW LOCATION WE WILL CREATE IT WITH DEFAULT REPORT COUNT=0 and DEFAULT REQUESTS=null
+		location.setReportCount(0);
+		location.setRequests(null);
 		location.setStatus(ACTIVE.name());
 
 		location.setType(request.getType());
