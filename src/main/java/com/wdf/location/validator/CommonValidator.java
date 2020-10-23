@@ -58,15 +58,6 @@ public class CommonValidator {
 		if (StringUtils.isEmpty(request.getType())) {
 			throw new BusinessException(ResponseCodes.BLANK_TYPE);
 		}
-		// if (CollectionUtils.isEmpty(request.getTags())) {
-		// throw new BusinessException(ResponseCodes.EMPTY_TAG_LIST);
-		// }
-		// TODO : REQUEST CANNOT HAVE TAGS, Wrong validation
-
-		// if (StringUtils.isEmpty(request.getStatus())) {
-		// throw new BusinessException(ResponseCodes.BLANK_STATUS);
-		// }
-		// TODO : REQUEST CANNOT HAVE STATUS DUDE, Wrong validation
 	}
 
 	private void validateGeoLocation(String geoLocation) {

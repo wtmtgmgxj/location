@@ -36,7 +36,8 @@ public class LocationDataService {
 	}
 
 	// TODO GET RESPONSE IS BEING CALLED DIRECTLY FROM DATA SERVICE? WHATS THE USE OF
-	// CONVERTERS THEN?
+	// CONVERTERS THEN? : yaha pe parent n all bhi to set krne h. isliy direct usi mein
+	// set krdiya.
 	public GetResponse get(String id, String userId) {
 
 		GetResponse response = new GetResponse();

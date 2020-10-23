@@ -1,6 +1,5 @@
 package com.wdf.location.service;
 
-import com.wdf.location.convert.AddConverter;
 import com.wdf.location.datasource.dataservice.LocationDataService;
 import com.wdf.location.response.BaseResponse;
 import com.wdf.location.response.GetResponse;
@@ -12,9 +11,6 @@ import java.util.List;
 
 @Service
 public class GetService extends BaseService {
-
-	@Autowired
-	AddConverter addConverter;
 
 	@Autowired
 	private LocationDataService locationDataService;
