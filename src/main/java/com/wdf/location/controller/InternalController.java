@@ -21,7 +21,7 @@ import static com.wdf.location.constants.ApplicationConstants.INTERNAL;
 import static com.wdf.location.constants.RequestHeader.USERID;
 
 @Slf4j
-@RestController(INTERNAL)
+@RestController("/" + APPLICATION_NAME+INTERNAL+"/")
 public class InternalController {
 
 	@Autowired
@@ -39,7 +39,7 @@ public class InternalController {
 	@Autowired
 	private CommonValidator validator;
 
-	@RequestMapping(value = { "/" + APPLICATION_NAME + "/club/{idA}/{idB}" }, method = { RequestMethod.PUT },
+	@RequestMapping(value = { "/club/{idA}/{idB}" }, method = { RequestMethod.PUT },
 			consumes = { "application/json" })
 	@ApiOperation(value = "Clubs location", notes = "This api clubs location.")
 	public @ResponseBody BaseResponse<PostResponse> club(@PathVariable String idA, @PathVariable String idB,
@@ -51,7 +51,7 @@ public class InternalController {
 	}
 
 	@ApiOperation(value = "change parent", notes = "This api will change parent")
-	@RequestMapping(value = { "/" + APPLICATION_NAME + "/changeparent/{child}/{newParent}" },
+	@RequestMapping(value = { "/changeparent/{child}/{newParent}" },
 			method = { RequestMethod.PUT }, consumes = { "application/json" })
 	public @ResponseBody BaseResponse<GetResponse> changeParent(@PathVariable String child,
 			@PathVariable String newParent, @RequestParam Long requestTimestamp,
@@ -64,7 +64,7 @@ public class InternalController {
 	}
 
 	@ApiOperation(value = "remove location", notes = "This api will give remove location")
-	@RequestMapping(value = { "/" + APPLICATION_NAME + "/{id}" }, method = { RequestMethod.DELETE },
+	@RequestMapping(value = {  "/{id}" }, method = { RequestMethod.DELETE },
 			consumes = { "application/json" })
 	public @ResponseBody BaseResponse<PostResponse> removeLocation(@PathVariable String id,
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
@@ -76,7 +76,7 @@ public class InternalController {
 	}
 
 	@ApiOperation(value = "update location", notes = "This api will give update location")
-	@RequestMapping(value = { "/" + APPLICATION_NAME + "/{id}" }, method = { RequestMethod.PATCH },
+	@RequestMapping(value = {  "/{id}" }, method = { RequestMethod.PATCH },
 			consumes = { "application/json" })
 	public @ResponseBody BaseResponse updateLocation(@PathVariable String id,
 			@RequestParam(required = false) String name, @RequestParam(required = false) String tag,
@@ -91,7 +91,7 @@ public class InternalController {
 	}
 
 	@ApiOperation(value = "get requests", notes = "This api will give get requests")
-	@RequestMapping(value = { "/" + APPLICATION_NAME + "/requests/{n}" }, method = { RequestMethod.GET },
+	@RequestMapping(value = { "/requests/{n}" }, method = { RequestMethod.GET },
 			consumes = { "application/json" })
 	public @ResponseBody BaseResponse<List<String>> getRequests(@PathVariable String x,
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
@@ -103,7 +103,7 @@ public class InternalController {
 	}
 
 	@ApiOperation(value = "discard requests", notes = "This api will give discard requests")
-	@RequestMapping(value = { "/" + APPLICATION_NAME + "/{id}" }, method = { RequestMethod.PATCH },
+	@RequestMapping(value = {  "/{id}" }, method = { RequestMethod.PATCH },
 			consumes = { "application/json" })
 	public @ResponseBody BaseResponse discardRequests(@RequestBody List<String> locationIdList,
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
