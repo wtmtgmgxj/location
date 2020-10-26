@@ -1,5 +1,6 @@
 package com.wdf.location.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.wdf.location.constants.Flow;
 import com.wdf.location.response.BaseResponse;
 import com.wdf.location.response.GetResponse;
@@ -89,7 +90,7 @@ public class InternalController {
 
 	@ApiOperation(value = "get requests", notes = "This api will give get requests")
 	@RequestMapping(value = { "/requests/{n}" }, method = { RequestMethod.GET }, consumes = { "application/json" })
-	public @ResponseBody BaseResponse<List<Map<String, String>>> getRequests(@PathVariable String x,
+	public @ResponseBody BaseResponse<List<JsonNode>> getRequests(@PathVariable String x,
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);

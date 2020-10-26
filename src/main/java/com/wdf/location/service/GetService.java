@@ -1,5 +1,6 @@
 package com.wdf.location.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.wdf.location.datasource.dataservice.LocationDataService;
 import com.wdf.location.response.BaseResponse;
 import com.wdf.location.response.GetResponse;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class GetService extends BaseService {
@@ -28,8 +28,8 @@ public class GetService extends BaseService {
 		return response;
 	}
 
-	public BaseResponse<List<Map<String, String>>> getRequests(String userId, String x) {
-		BaseResponse<List<Map<String, String>>> response = new BaseResponse();
+	public BaseResponse<List<JsonNode>> getRequests(String userId, String x) {
+		BaseResponse<List<JsonNode>> response = new BaseResponse();
 		response.setRespCode(ResponseCodes.OK.name());
 		response.setData(locationDataService.fetchFirstXNonNullRequests(x));
 		return response;
