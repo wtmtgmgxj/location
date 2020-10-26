@@ -15,7 +15,7 @@ public class ApplicationConstants {
 	public static final String TRACER = "tracer"; // TODO X-Request-ID used in its place.
 													// Remove it if not used later
 
-	public static final String EXTERNAL = "";
+	public static final String EXTERNAL = "/";
 
 	public static final String INTERNAL = "/internal";
 

@@ -81,4 +81,7 @@ public class Location {
 	// Currently this JSON suports only 1 UPDATE and one REMOVAL. You can discuss before
 	// implementing this
 
+
+
+//	 fields to be updated are name , type and geolocation only
 }

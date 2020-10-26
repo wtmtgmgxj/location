@@ -22,7 +22,7 @@ import static com.wdf.location.constants.ApplicationConstants.EXTERNAL;
 import static com.wdf.location.constants.RequestHeader.*;
 
 @Slf4j
-@RestController(EXTERNAL)
+@RestController("/" + APPLICATION_NAME + EXTERNAL)
 public class ExternalController {
 
 	@Autowired
@@ -37,10 +37,9 @@ public class ExternalController {
 	@Autowired
 	private GetService getService;
 
-	@RequestMapping(value = { "/" + APPLICATION_NAME + "/add" }, method = { RequestMethod.PUT },
+	@RequestMapping(value = {  "/add" }, method = { RequestMethod.PUT },
 			consumes = { "application/json" })
 	@ApiOperation(value = "Add location", notes = "This api adds location.")
-	// TODO explain why the BASE RESPONSE IS USING GENERICS HERE
 	public @ResponseBody BaseResponse<PostResponse> add(@Validated @RequestBody AddRequest request,
 			@RequestHeader Map<String, String> headers) {
 
@@ -56,7 +55,7 @@ public class ExternalController {
 
 	@ApiOperation(value = "Get location details",
 			notes = "This api will give details of the parent as well as all the immediate children.")
-	@RequestMapping(value = { "/" + APPLICATION_NAME + "/get/{id}" }, method = { RequestMethod.GET },
+	@RequestMapping(value = { "/get/{id}" }, method = { RequestMethod.GET },
 			consumes = { "application/json" })
 	public @ResponseBody BaseResponse<GetResponse> get(@PathVariable String id, @RequestParam Long requestTimestamp,
 			@RequestHeader Map<String, String> headers) {
@@ -68,7 +67,7 @@ public class ExternalController {
 	}
 
 	@ApiOperation(value = "increase report count", notes = "This api will give increase report count")
-	@RequestMapping(value = { "/" + APPLICATION_NAME + "/report/{id}" }, method = { RequestMethod.POST },
+	@RequestMapping(value = {  "/report/{id}" }, method = { RequestMethod.POST },
 			consumes = { "application/json" })
 	public @ResponseBody BaseResponse<PostResponse> reportCountUpdate(@PathVariable String id,
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
@@ -80,26 +79,30 @@ public class ExternalController {
 	}
 
 	@ApiOperation(value = "update request", notes = "This api will give update request")
-	@RequestMapping(value = { "/" + APPLICATION_NAME + "/request/update" }, method = { RequestMethod.POST },
+	@RequestMapping(value = {  "/request/update/{fieldName}/{newValue}/{id}" }, method = { RequestMethod.POST },
 			consumes = { "application/json" })
-	public @ResponseBody BaseResponse<PostResponse> requestUpdate(@RequestParam Long requestTimestamp,
+	public @ResponseBody BaseResponse<PostResponse> requestUpdate(
+			@PathVariable String fieldName , @PathVariable String newValue , @PathVariable String id ,
+			@RequestParam Long requestTimestamp,
 			@RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);
 
-		return updateService.requestUpdate(headers.get(USERID));
+		return updateService.requestUpdate(headers.get(USERID),fieldName, newValue, Flow.UPDATE , id );
 
 	}
 
 	@ApiOperation(value = "remove request", notes = "This api will give remove request")
-	@RequestMapping(value = { "/" + APPLICATION_NAME + "/request/remove" }, method = { RequestMethod.POST },
+	@RequestMapping(value = { "/request/remove/{fieldName}/{newValue}/{id}" }, method = { RequestMethod.POST },
 			consumes = { "application/json" })
-	public @ResponseBody BaseResponse<PostResponse> requestRemove(@RequestParam Long requestTimestamp,
+	public @ResponseBody BaseResponse<PostResponse> requestRemove(
+			@PathVariable String fieldName , @PathVariable String newValue , @PathVariable String id ,
+			@RequestParam Long requestTimestamp,
 			@RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);
 
-		return updateService.requestRemove(headers.get(USERID));
+		return updateService.requestUpdate(headers.get(USERID), fieldName, newValue , Flow.DELETE , id);
 
 	}
 
