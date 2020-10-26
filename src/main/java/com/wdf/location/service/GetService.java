@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GetService extends BaseService {
@@ -27,8 +28,8 @@ public class GetService extends BaseService {
 		return response;
 	}
 
-	public BaseResponse<List<String>> getRequests(String userId, String x) {
-		BaseResponse<List<String>> response = new BaseResponse();
+	public BaseResponse<List<Map<String, String>>> getRequests(String userId, String x) {
+		BaseResponse<List<Map<String, String>>> response = new BaseResponse();
 		response.setRespCode(ResponseCodes.OK.name());
 		response.setData(locationDataService.fetchFirstXNonNullRequests(x));
 		return response;

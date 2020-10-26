@@ -72,6 +72,8 @@ public class Location {
 	private JsonNode requests; // BOTH KEYS CAN BE PRESENT SIMULTANEOUSLY, UPDATE/REMOVAL
 								// : {"requests":[UPDATE,REMOVAL]}
 
+	// {"requests":{"UPDATE":{"NAME":"AYUSHI"},"REMOVAL":{"NAME":"AYUSHI"}}
+
 	// Let us suppose
 	// Babli adds a location DELLY.
 	// You would like to correct this to DELHI.
@@ -81,7 +83,6 @@ public class Location {
 	// Currently this JSON suports only 1 UPDATE and one REMOVAL. You can discuss before
 	// implementing this
 
+	// fields to be updated are name , type and geolocation only
 
-
-//	 fields to be updated are name , type and geolocation only
 }

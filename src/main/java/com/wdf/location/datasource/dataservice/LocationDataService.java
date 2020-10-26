@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,10 +63,13 @@ public class LocationDataService {
 		locationMasterRepository.removeLocation(location);
 	}
 
-	public List<String> fetchFirstXNonNullRequests(String x) {
+	public List<Map<String, String>> fetchFirstXNonNullRequests(String x) {
 		List<JsonNode> requestList = locationMasterRepository.findXNonNullReports(x);
-		return requestList.stream().map(y -> ApplicationConstants.objectMapper.convertValue(y, HashMap.class))
-				.map(z -> z.get("requests").toString()).collect(Collectors.toList());
+		List<Map<String, Map<String, String>>> mapList = requestList.stream()
+				.map(y -> ApplicationConstants.objectMapper.convertValue(y, Map.class)).collect(Collectors.toList());
+
+		return mapList.stream().map(y -> ApplicationConstants.objectMapper.convertValue(y.get("requests"), Map.class))
+				.collect(Collectors.toList());
 
 	}
 

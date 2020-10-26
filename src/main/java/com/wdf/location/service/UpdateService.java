@@ -33,38 +33,39 @@ public class UpdateService extends BaseService<PostResponse> {
 		return createSuccessResponse();
 	}
 
-	public BaseResponse requestUpdate(final String userId, final String fieldName, String newValue,
-													final Flow type, final String id) {
+	public BaseResponse requestUpdate(final String userId, final String fieldName, String newValue, final Flow type,
+			final String id) {
 
 		Location location = locationDataService.findByUid(id);
-		Map<String, Map<String, String>> requestMap = ApplicationConstants.objectMapper.convertValue(location.getRequests(), HashMap.class);
+		Map<String, Map<String, String>> requestMap = ApplicationConstants.objectMapper
+				.convertValue(location.getRequests(), HashMap.class);
 
 		String values = null;
 		String toSetType = null;
 		// only 1 update or remove type allowed.
-		if(Flow.UPDATE.equals(type)){
+		if (Flow.UPDATE.equals(type)) {
 			toSetType = "UPDATE";
-		} else if(Flow.DELETE.equals(type)){
+		}
+		else if (Flow.DELETE.equals(type)) {
 			toSetType = "REMOVAL";
 		}
 
 		// {"requests":{"UPDATE":{"NAME":"AYUSHI"},"REMOVAL":{"NAME":"AYUSHI"}}
 		values = requestMap.get("requests").get(toSetType);
-		if(StringUtils.isEmpty(values)){
+		if (StringUtils.isEmpty(values)) {
 			Map<String, String> newMap = new HashMap<>();
-			newMap.put(fieldName,newValue);
-			requestMap.put("requests",newMap);
-		}else{
+			newMap.put(fieldName, newValue);
+			requestMap.put("requests", newMap);
+		}
+		else {
 			throw new BusinessException(ResponseCodes.PREVIOUS_REQUEST_PENDING);
 		}
 
-		location.setRequests(ApplicationConstants.objectMapper.convertValue(requestMap,JsonNode.class));
+		location.setRequests(ApplicationConstants.objectMapper.convertValue(requestMap, JsonNode.class));
 		location.setLastUpdatedBy(userId);
 		locationDataService.save(location);
 		return createSuccessResponse();
 	}
-
-
 
 	public BaseResponse club(String userID, String idA, String idB) {
 
