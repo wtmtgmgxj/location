@@ -284,8 +284,6 @@
 
 		</dependency>
 
-
-
 <!--		<dependency>-->
 <!--			<groupId>org.mockito</groupId>-->
 <!--			<artifactId>mockito-all</artifactId>-->
@@ -392,6 +390,11 @@
 			<version>${spring-kafka.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.vladmihalcea</groupId>
+			<artifactId>hibernate-types-5</artifactId>
+			<version>2.2.2</version>
+		</dependency>
 
 	</dependencies>
 

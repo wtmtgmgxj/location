@@ -22,7 +22,7 @@ import static com.wdf.location.constants.ApplicationConstants.INTERNAL;
 import static com.wdf.location.constants.RequestHeader.USERID;
 
 @Slf4j
-@RestController("/" + APPLICATION_NAME + INTERNAL + "/")
+@RestController("/" + APPLICATION_NAME + INTERNAL)
 public class InternalController {
 
 	@Autowired
@@ -100,7 +100,8 @@ public class InternalController {
 	}
 
 	@ApiOperation(value = "discard requests", notes = "This api will give discard requests")
-	@RequestMapping(value = { "/{id}" }, method = { RequestMethod.PATCH }, consumes = { "application/json" })
+	@RequestMapping(value = { "/internal/discard" }, method = { RequestMethod.PATCH },
+			consumes = { "application/json" })
 	public @ResponseBody BaseResponse discardRequests(@RequestBody List<String> locationIdList,
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
 

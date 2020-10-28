@@ -1,6 +1,7 @@
 package com.wdf.location.datasource.dataservice;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.wdf.location.constants.ApplicationConstants;
 import com.wdf.location.datasource.model.Location;
 import com.wdf.location.datasource.repository.master.LocationMasterRepository;
 import com.wdf.location.response.GetResponse;
@@ -45,7 +46,7 @@ public class LocationDataService {
 
 		List<String> ids = new ArrayList<>();
 		ids.add(location.getParent());
-		ids.addAll(location.getChildren().findValuesAsText("list"));
+		ids.addAll(ApplicationConstants.objectMapper.convertValue(location.getChildren().get("list"), List.class));
 
 		List<Location> locations = locationMasterRepository.findAllByUid(ids);
 

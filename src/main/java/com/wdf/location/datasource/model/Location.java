@@ -1,17 +1,21 @@
 package com.wdf.location.datasource.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Map;
 
 @Entity
 @Data
 @DynamicInsert
 @DynamicUpdate
+@TypeDef(name = "json", typeClass = JsonStringType.class)
 public class Location {
 
 	@Id
@@ -24,8 +28,10 @@ public class Location {
 	@Column(name = "parent")
 	private String parent; // For the topmost, parent will then have a dummy uuid
 
-	@Column(name = "children")
-	private JsonNode children; // nullable: {"children": [uuid-1,uuid-2,uuid-3]}
+	@Type(type = "json")
+	@Column(columnDefinition = "json", name = "children")
+	private Map<String, Object> children; // nullable: {"children":
+											// [uuid-1,uuid-2,uuid-3]}
 
 	@Column(name = "uid")
 	private String uid; // unique uuid
@@ -42,10 +48,13 @@ public class Location {
 	@Column(name = "type")
 	private String type;
 
-	@Column(name = "tags")
-	private JsonNode tags; // If I am creating a record for Delhi, Tags will be the
-							// information of all the parents of Delhi, {"tags":
-							// [tag-1,tag-2,tag-3]} + Delhi itself
+	@Type(type = "json")
+	@Column(columnDefinition = "json", name = "tags")
+	private Map<String, Object> tags; // If I am creating a record for Delhi, Tags will be
+										// the
+
+	// information of all the parents of Delhi, {"tags":
+	// [tag-1,tag-2,tag-3]} + Delhi itself
 
 	// So tags will contain all of WORLD,ASIA,INDIA,DELHI
 	// So you have to fetch the Immediate Parent and copy its tag and add to it
@@ -68,9 +77,12 @@ public class Location {
 	@Column(name = "updated_on")
 	private Date updatedOn;
 
-	@Column(name = "requests")
-	private JsonNode requests; // BOTH KEYS CAN BE PRESENT SIMULTANEOUSLY, UPDATE/REMOVAL
-								// : {"requests":[UPDATE,REMOVAL]}
+	@Type(type = "json")
+	@Column(columnDefinition = "json", name = "requests")
+	private Map<String, Object> requests; // BOTH KEYS CAN BE PRESENT SIMULTANEOUSLY,
+											// UPDATE/REMOVAL
+
+	// : {"requests":[UPDATE,REMOVAL]}
 
 	// {"requests":{"UPDATE":{"NAME":"AYUSHI"},"REMOVAL":{"NAME":"AYUSHI"}}
 

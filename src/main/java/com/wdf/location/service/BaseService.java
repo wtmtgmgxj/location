@@ -1,6 +1,5 @@
 package com.wdf.location.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.wdf.location.constants.ApplicationConstants;
 import com.wdf.location.constants.Flow;
 import com.wdf.location.datasource.model.Location;
@@ -9,6 +8,7 @@ import com.wdf.location.response.ResponseCodes;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class BaseService<T> {
 
@@ -30,7 +30,9 @@ public abstract class BaseService<T> {
 		if (Flow.DELETE.equals(flowtype))
 			children.remove(childUid);
 
-		parentLocation.setChildren(ApplicationConstants.objectMapper.convertValue(children, JsonNode.class));
+		Map<String, Object> map = new HashMap<>();
+		map.put("children", children);
+		parentLocation.setChildren(ApplicationConstants.objectMapper.convertValue(map, HashMap.class));
 		return parentLocation;
 	}
 

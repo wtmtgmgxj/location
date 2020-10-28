@@ -1,6 +1,5 @@
 package com.wdf.location.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.wdf.location.constants.ApplicationConstants;
 import com.wdf.location.constants.Flow;
 import com.wdf.location.datasource.dataservice.LocationDataService;
@@ -61,7 +60,7 @@ public class UpdateService extends BaseService<PostResponse> {
 			throw new BusinessException(ResponseCodes.PREVIOUS_REQUEST_PENDING);
 		}
 
-		location.setRequests(ApplicationConstants.objectMapper.convertValue(requestMap, JsonNode.class));
+		location.setRequests(ApplicationConstants.objectMapper.convertValue(requestMap, HashMap.class));
 		location.setLastUpdatedBy(userId);
 		locationDataService.save(location);
 		return createSuccessResponse();
@@ -82,7 +81,7 @@ public class UpdateService extends BaseService<PostResponse> {
 		tagsA.addAll(tagsB);
 		mapA.put("tags", tagsA);
 
-		locationA.setTags(ApplicationConstants.objectMapper.convertValue(mapA, JsonNode.class));
+		locationA.setTags(ApplicationConstants.objectMapper.convertValue(mapA, HashMap.class));
 		locationB.setStatus(INACTIVE.name());
 		List<Location> allLocation = new ArrayList<>();
 		allLocation.add(locationA);
@@ -185,7 +184,7 @@ public class UpdateService extends BaseService<PostResponse> {
 					.isPresent()) {
 				existingTags.add(tag);
 				map.put("tags", existingTags);
-				location.setTags(ApplicationConstants.objectMapper.convertValue(map, JsonNode.class));
+				location.setTags(ApplicationConstants.objectMapper.convertValue(map, HashMap.class));
 			}
 		}
 		location.setLastUpdatedBy(userID);

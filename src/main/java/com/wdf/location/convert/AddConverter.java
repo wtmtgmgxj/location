@@ -1,6 +1,5 @@
 package com.wdf.location.convert;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.wdf.location.constants.ApplicationConstants;
 import com.wdf.location.datasource.model.Location;
 import com.wdf.location.request.AddRequest;
@@ -31,7 +30,7 @@ public class AddConverter {
 		Map<String, List<String>> map = ApplicationConstants.objectMapper.convertValue(parentLocation.getTags(),
 				HashMap.class);
 		map.get("tags").add(request.getName());
-		location.setTags(ApplicationConstants.objectMapper.convertValue(map, JsonNode.class));
+		location.setTags(ApplicationConstants.objectMapper.convertValue(map, HashMap.class));
 
 		location.setName(request.getName());
 		location.setParent(request.getParent());
