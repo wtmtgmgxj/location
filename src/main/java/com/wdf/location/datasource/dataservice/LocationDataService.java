@@ -1,6 +1,5 @@
 package com.wdf.location.datasource.dataservice;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.wdf.location.constants.ApplicationConstants;
 import com.wdf.location.datasource.model.Location;
 import com.wdf.location.datasource.repository.master.LocationMasterRepository;
@@ -11,7 +10,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,16 +76,33 @@ public class LocationDataService {
 		locationMasterRepository.removeLocation(location);
 	}
 
-	public List<JsonNode> fetchFirstXNonNullRequests(String x) {
-		return locationMasterRepository.findXNonNullReports(x);
-		// List<Map<String, Map<String, String>>> mapList = requestList.stream()
-		// .map(y -> ApplicationConstants.objectMapper.convertValue(y,
-		// Map.class)).collect(Collectors.toList());
-		//
-		// return mapList.stream().map(y ->
-		// ApplicationConstants.objectMapper.convertValue(y.get("requests"), Map.class))
-		// .collect(Collectors.toList());
+	public List<Map<String, Map<String, String>>> fetchFirstXNonNullRequests(String x) {
+		Map requestMap = new HashMap<String, Map<String, Map<String, String>>>();
+		List<Location> list = locationMasterRepository.findXNonNullReports(Integer.parseInt(x));
+		List<Map<String, Map<String, String>>> listToSend = new ArrayList<>();
 
+		for (final int[] i = { 0 }; i[0] < Integer.parseInt(x);) {
+
+			if (i[0] > list.size()) {
+				break;
+			}
+
+			Map<String, Map<String, String>> values = ApplicationConstants.objectMapper
+					.convertValue(list.get(i[0]).getRequests().get("requests"), HashMap.class);
+
+			Map<String, Map<String, String>> mapToSend = new HashMap<>();
+
+			values.keySet().forEach(key -> {
+				if (mapToSend.size() + 1 <= Integer.parseInt(x)) {
+					mapToSend.put(key, values.get(key));
+					i[0] = i[0] + 1;
+				}
+			});
+
+			listToSend.add(mapToSend);
+		}
+
+		return listToSend;
 	}
 
 }

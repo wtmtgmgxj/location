@@ -7,6 +7,7 @@ import com.wdf.location.response.BaseResponse;
 import com.wdf.location.response.builder.ResponseBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -34,6 +35,12 @@ public class Advice {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Exception.class)
 	public BaseResponse handleException(Exception exception) {
+		return responseBuilder.baseResponse(exception);
+	}
+
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler({ RuntimeException.class, DataAccessException.class })
+	public BaseResponse handleException(RuntimeException exception) {
 		return responseBuilder.baseResponse(exception);
 	}
 

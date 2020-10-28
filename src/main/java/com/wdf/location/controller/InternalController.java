@@ -1,6 +1,5 @@
 package com.wdf.location.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.wdf.location.constants.Flow;
 import com.wdf.location.response.BaseResponse;
 import com.wdf.location.response.GetResponse;
@@ -17,12 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-import static com.wdf.location.constants.ApplicationConstants.APPLICATION_NAME;
-import static com.wdf.location.constants.ApplicationConstants.INTERNAL;
 import static com.wdf.location.constants.RequestHeader.USERID;
 
 @Slf4j
-@RestController("/" + APPLICATION_NAME + INTERNAL)
+@RestController
 public class InternalController {
 
 	@Autowired
@@ -40,10 +37,11 @@ public class InternalController {
 	@Autowired
 	private CommonValidator validator;
 
-	@RequestMapping(value = { "club/{idA}/{idB}" }, method = { RequestMethod.PUT }, consumes = { "application/json" })
+	@RequestMapping(value = { "/location/internal/club/{idA}/{idB}" }, method = { RequestMethod.PUT },
+			consumes = { "application/json" })
 	@ApiOperation(value = "Clubs location", notes = "This api clubs location.")
 	public @ResponseBody BaseResponse<PostResponse> club(@PathVariable String idA, @PathVariable String idB,
-			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
+			@RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);
 		return updateService.club(headers.get(USERID.getValue()), idA, idB);
@@ -51,11 +49,10 @@ public class InternalController {
 	}
 
 	@ApiOperation(value = "change parent", notes = "This api will change parent")
-	@RequestMapping(value = { "changeparent/{child}/{newParent}" }, method = { RequestMethod.PUT },
+	@RequestMapping(value = { "/location/internal/changeparent/{child}/{newParent}" }, method = { RequestMethod.PUT },
 			consumes = { "application/json" })
 	public @ResponseBody BaseResponse<GetResponse> changeParent(@PathVariable String child,
-			@PathVariable String newParent, @RequestParam Long requestTimestamp,
-			@RequestHeader Map<String, String> headers) {
+			@PathVariable String newParent, @RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);
 
@@ -64,9 +61,10 @@ public class InternalController {
 	}
 
 	@ApiOperation(value = "remove location", notes = "This api will give remove location")
-	@RequestMapping(value = { "{id}" }, method = { RequestMethod.DELETE }, consumes = { "application/json" })
+	@RequestMapping(value = { "/location/internal/{id}" }, method = { RequestMethod.DELETE },
+			consumes = { "application/json" })
 	public @ResponseBody BaseResponse<PostResponse> removeLocation(@PathVariable String id,
-			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
+			@RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);
 
@@ -75,12 +73,12 @@ public class InternalController {
 	}
 
 	@ApiOperation(value = "update location", notes = "This api will give update location")
-	@RequestMapping(value = { "{id}" }, method = { RequestMethod.PATCH }, consumes = { "application/json" })
+	@RequestMapping(value = { "/location/internal/{id}" }, method = { RequestMethod.PATCH },
+			consumes = { "application/json" })
 	public @ResponseBody BaseResponse updateLocation(@PathVariable String id,
 			@RequestParam(required = false) String name, @RequestParam(required = false) String tag,
 			@RequestParam(required = false) String imageUrl, @RequestParam(required = false) String geoLocation,
-			@RequestParam(required = false) String type, @RequestParam Long requestTimestamp,
-			@RequestHeader Map<String, String> headers) {
+			@RequestParam(required = false) String type, @RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);
 
@@ -89,9 +87,10 @@ public class InternalController {
 	}
 
 	@ApiOperation(value = "get requests", notes = "This api will give get requests")
-	@RequestMapping(value = { "requests/{n}" }, method = { RequestMethod.GET }, consumes = { "application/json" })
-	public @ResponseBody BaseResponse<List<JsonNode>> getRequests(@PathVariable String x,
-			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
+	@RequestMapping(value = { "/location/internal/requests/{x}" }, method = { RequestMethod.GET },
+			consumes = { "application/json" })
+	public @ResponseBody BaseResponse<List<Map<String, Map<String, String>>>> getRequests(@PathVariable String x,
+			@RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);
 
@@ -100,9 +99,10 @@ public class InternalController {
 	}
 
 	@ApiOperation(value = "discard requests", notes = "This api will give discard requests")
-	@RequestMapping(value = { "internal/discard" }, method = { RequestMethod.PATCH }, consumes = { "application/json" })
+	@RequestMapping(value = { "/location/internal/discard" }, method = { RequestMethod.PATCH },
+			consumes = { "application/json" })
 	public @ResponseBody BaseResponse discardRequests(@RequestBody List<String> locationIdList,
-			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
+			@RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);
 

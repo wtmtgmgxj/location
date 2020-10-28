@@ -1,6 +1,5 @@
 package com.wdf.location.datasource.repository.master;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.wdf.location.datasource.model.Location;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -21,7 +20,7 @@ public interface LocationMasterRepository extends CrudRepository<Location, Long>
 	@Query(value = "update location", nativeQuery = true)
 	void removeLocation(String location);
 
-	@Query(value = "select l.requests from location l where l.requests is not null limit :x", nativeQuery = true)
-	List<JsonNode> findXNonNullReports(@PathParam("x") String x);
+	@Query(value = "select l.* from location l where l.requests is not null limit :x", nativeQuery = true)
+	List<Location> findXNonNullReports(@PathParam("x") int x);
 
 }

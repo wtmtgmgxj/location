@@ -2,9 +2,9 @@ package com.wdf.location.controller;
 
 import com.wdf.location.constants.Flow;
 import com.wdf.location.request.AddRequest;
-import com.wdf.location.response.PostResponse;
 import com.wdf.location.response.BaseResponse;
 import com.wdf.location.response.GetResponse;
+import com.wdf.location.response.PostResponse;
 import com.wdf.location.service.AddService;
 import com.wdf.location.service.GetService;
 import com.wdf.location.service.UpdateService;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static com.wdf.location.constants.ApplicationConstants.APPLICATION_NAME;
 import static com.wdf.location.constants.ApplicationConstants.EXTERNAL;
-import static com.wdf.location.constants.RequestHeader.*;
+import static com.wdf.location.constants.RequestHeader.USERID;
 
 @Slf4j
 @RestController("/" + APPLICATION_NAME + EXTERNAL)

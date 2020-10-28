@@ -17,6 +17,6 @@ public class ApplicationConstants {
 
 	public static final String EXTERNAL = "/";
 
-	public static final String INTERNAL = "/internal/";
+	public static final String INTERNAL = "/internal";
 
 }
