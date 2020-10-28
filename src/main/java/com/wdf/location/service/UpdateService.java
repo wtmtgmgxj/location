@@ -10,6 +10,7 @@ import com.wdf.location.response.PostResponse;
 import com.wdf.location.response.ResponseCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -36,10 +37,10 @@ public class UpdateService extends BaseService<PostResponse> {
 			final String id) {
 
 		Location location = locationDataService.findByUid(id);
-		Map<String, Map<String, String>> requestMap = ApplicationConstants.objectMapper
+		Map<String, Map<String, Map<String, String>>> requestMap = ApplicationConstants.objectMapper
 				.convertValue(location.getRequests(), HashMap.class);
 
-		String values = null;
+		Map values = null;
 		String toSetType = null;
 		// only 1 update or remove type allowed.
 		if (Flow.UPDATE.equals(type)) {
@@ -50,16 +51,23 @@ public class UpdateService extends BaseService<PostResponse> {
 		}
 
 		// {"requests":{"UPDATE":{"NAME":"AYUSHI"},"REMOVAL":{"NAME":"AYUSHI"}}
+
+		if (requestMap == null)
+			requestMap = new HashMap<String, Map<String, Map<String, String>>>();
+
+		if (requestMap.get("requests") == null) {
+			requestMap.put("requests", new HashMap<String, Map<String, String>>());
+		}
+
 		values = requestMap.get("requests").get(toSetType);
-		if (StringUtils.isEmpty(values)) {
+		if (CollectionUtils.isEmpty(values)) {
 			Map<String, String> newMap = new HashMap<>();
 			newMap.put(fieldName, newValue);
-			requestMap.put("requests", newMap);
+			requestMap.get("requests").put(toSetType, newMap);
 		}
 		else {
 			throw new BusinessException(ResponseCodes.PREVIOUS_REQUEST_PENDING);
 		}
-
 		location.setRequests(ApplicationConstants.objectMapper.convertValue(requestMap, HashMap.class));
 		location.setLastUpdatedBy(userId);
 		locationDataService.save(location);

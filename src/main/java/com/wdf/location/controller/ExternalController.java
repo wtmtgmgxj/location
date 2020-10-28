@@ -56,23 +56,23 @@ public class ExternalController {
 	@ApiOperation(value = "Get location details",
 			notes = "This api will give details of the parent as well as all the immediate children.")
 	@RequestMapping(value = { "get/{id}" }, method = { RequestMethod.GET }, consumes = { "application/json" })
-	public @ResponseBody BaseResponse<GetResponse> get(@PathVariable String id, @RequestParam Long requestTimestamp,
+	public @ResponseBody BaseResponse<GetResponse> get(@PathVariable String id,
 			@RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);
 
-		return getService.get(headers.get(USERID), id);
+		return getService.get(headers.get(USERID.getValue()), id);
 
 	}
 
 	@ApiOperation(value = "increase report count", notes = "This api will give increase report count")
 	@RequestMapping(value = { "report/{id}" }, method = { RequestMethod.POST }, consumes = { "application/json" })
 	public @ResponseBody BaseResponse<PostResponse> reportCountUpdate(@PathVariable String id,
-			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
+			@RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);
 
-		return updateService.updateReportCount(headers.get(USERID), id);
+		return updateService.updateReportCount(headers.get(USERID.getValue()), id);
 
 	}
 
@@ -80,12 +80,11 @@ public class ExternalController {
 	@RequestMapping(value = { "request/update/{fieldName}/{newValue}/{id}" }, method = { RequestMethod.POST },
 			consumes = { "application/json" })
 	public @ResponseBody BaseResponse<PostResponse> requestUpdate(@PathVariable String fieldName,
-			@PathVariable String newValue, @PathVariable String id, @RequestParam Long requestTimestamp,
-			@RequestHeader Map<String, String> headers) {
+			@PathVariable String newValue, @PathVariable String id, @RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);
 
-		return updateService.requestUpdate(headers.get(USERID), fieldName, newValue, Flow.UPDATE, id);
+		return updateService.requestUpdate(headers.get(USERID.getValue()), fieldName, newValue, Flow.UPDATE, id);
 
 	}
 
@@ -93,12 +92,11 @@ public class ExternalController {
 	@RequestMapping(value = { "request/remove/{fieldName}/{newValue}/{id}" }, method = { RequestMethod.POST },
 			consumes = { "application/json" })
 	public @ResponseBody BaseResponse<PostResponse> requestRemove(@PathVariable String fieldName,
-			@PathVariable String newValue, @PathVariable String id, @RequestParam Long requestTimestamp,
-			@RequestHeader Map<String, String> headers) {
+			@PathVariable String newValue, @PathVariable String id, @RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);
 
-		return updateService.requestUpdate(headers.get(USERID), fieldName, newValue, Flow.DELETE, id);
+		return updateService.requestUpdate(headers.get(USERID.getValue()), fieldName, newValue, Flow.DELETE, id);
 
 	}
 

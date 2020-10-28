@@ -46,7 +46,7 @@ public class InternalController {
 			@RequestParam Long requestTimestamp, @RequestHeader Map<String, String> headers) {
 
 		validator.validate(null, headers, Flow.NONE);
-		return updateService.club(headers.get(USERID), idA, idB);
+		return updateService.club(headers.get(USERID.getValue()), idA, idB);
 
 	}
 
@@ -59,7 +59,7 @@ public class InternalController {
 
 		validator.validate(null, headers, Flow.NONE);
 
-		return updateService.changeParent(headers.get(USERID), child, newParent);
+		return updateService.changeParent(headers.get(USERID.getValue()), child, newParent);
 
 	}
 
@@ -70,7 +70,7 @@ public class InternalController {
 
 		validator.validate(null, headers, Flow.NONE);
 
-		return updateService.removeLocation(headers.get(USERID), id);
+		return updateService.removeLocation(headers.get(USERID.getValue()), id);
 
 	}
 
@@ -84,7 +84,7 @@ public class InternalController {
 
 		validator.validate(null, headers, Flow.NONE);
 
-		return updateService.updateLocation(headers.get(USERID), id, name, tag, imageUrl, geoLocation, type);
+		return updateService.updateLocation(headers.get(USERID.getValue()), id, name, tag, imageUrl, geoLocation, type);
 
 	}
 
@@ -95,7 +95,7 @@ public class InternalController {
 
 		validator.validate(null, headers, Flow.NONE);
 
-		return getService.getRequests(headers.get(USERID), x);
+		return getService.getRequests(headers.get(USERID.getValue()), x);
 
 	}
 
@@ -106,7 +106,7 @@ public class InternalController {
 
 		validator.validate(null, headers, Flow.NONE);
 
-		return updateService.discardRequests(headers.get(USERID), locationIdList);
+		return updateService.discardRequests(headers.get(USERID.getValue()), locationIdList);
 
 	}
 
