@@ -56,18 +56,17 @@ public class LocationDataService {
 
 		List<Location> locations = locationMasterRepository.findAllByUid(ids);
 
-		if(!CollectionUtils.isEmpty(locations)){
-			if(location.getParent() != null) {
-				response.setParent(
-						locations.stream().filter(x -> x.getUid().equalsIgnoreCase(location.getParent())).findAny().get());
+		if (!CollectionUtils.isEmpty(locations)) {
+			if (location.getParent() != null) {
+				response.setParent(locations.stream().filter(x -> x.getUid().equalsIgnoreCase(location.getParent()))
+						.findAny().get());
 				response.setChildren(locations.stream().filter(x -> !x.getUid().equalsIgnoreCase(location.getParent()))
-											  .collect(Collectors.toList()));
+						.collect(Collectors.toList()));
 			}
-			else{
+			else {
 
 			}
 		}
-
 
 		return response;
 	}
