@@ -20,7 +20,7 @@ public class ResponseBuilder {
 	}
 
 	public BaseResponse baseResponse(ResponseCodes e) {
-		return new BaseResponse(APPLICATION_NAME + HYPHEN + ResponseCodes.getCodeFromException(e.name()));
+		return new BaseResponse(APPLICATION_NAME + HYPHEN + ResponseCodes.getCodeFromResponseMessage(e.name()));
 	}
 
 }

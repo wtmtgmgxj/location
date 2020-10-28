@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum RequestHeader {
 
-	USERID("X-User-ID"), REQUESTID("X-Request-ID"), CLIENTID("X-Client-ID"), DATE("Date");
+	USERID("x-user-id"), REQUESTID("x-request-id"), CLIENTID("x-client-id"), DATE("date");
 
 	private String value;
 

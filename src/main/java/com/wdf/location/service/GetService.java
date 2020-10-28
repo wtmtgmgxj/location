@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.wdf.location.constants.ApplicationConstants.APPLICATION_NAME;
+import static com.wdf.location.constants.ApplicationConstants.HYPHEN;
+
 @Service
 public class GetService extends BaseService {
 
@@ -23,14 +26,16 @@ public class GetService extends BaseService {
 
 	private BaseResponse<GetResponse> createSuccessResponse(GetResponse getResponse) {
 		BaseResponse<GetResponse> response = new BaseResponse();
-		response.setRespCode(ResponseCodes.OK.name());
+		response.setRespCode(
+				APPLICATION_NAME + HYPHEN + ResponseCodes.getCodeFromResponseMessage(ResponseCodes.OK.name()));
 		response.setData(getResponse);
 		return response;
 	}
 
 	public BaseResponse<List<JsonNode>> getRequests(String userId, String x) {
 		BaseResponse<List<JsonNode>> response = new BaseResponse();
-		response.setRespCode(ResponseCodes.OK.name());
+		response.setRespCode(
+				APPLICATION_NAME + HYPHEN + ResponseCodes.getCodeFromResponseMessage(ResponseCodes.OK.name()));
 		response.setData(locationDataService.fetchFirstXNonNullRequests(x));
 		return response;
 	}

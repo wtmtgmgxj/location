@@ -7,6 +7,7 @@ import com.wdf.location.datasource.repository.master.LocationMasterRepository;
 import com.wdf.location.response.GetResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,9 @@ public class LocationDataService {
 		GetResponse response = new GetResponse();
 		Location location = locationMasterRepository.findByUid(id);
 
+		if (ObjectUtils.isEmpty(location)) {
+			return null;
+		}
 		response.setLocation(location);
 
 		List<String> ids = new ArrayList<>();

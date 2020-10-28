@@ -10,11 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.wdf.location.constants.ApplicationConstants.APPLICATION_NAME;
+import static com.wdf.location.constants.ApplicationConstants.HYPHEN;
+
 public abstract class BaseService<T> {
 
 	BaseResponse<T> createSuccessResponse() {
 		BaseResponse response = new BaseResponse();
-		response.setRespCode(ResponseCodes.OK.name());
+		response.setRespCode(
+				APPLICATION_NAME + HYPHEN + ResponseCodes.getCodeFromResponseMessage(ResponseCodes.OK.name()));
 		return response;
 	}
 
