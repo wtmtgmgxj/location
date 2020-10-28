@@ -26,7 +26,7 @@ public class Advice {
 	}
 
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	@ExceptionHandler(TechnicalException.class)
+	@ExceptionHandler({ TechnicalException.class, NumberFormatException.class })
 	public BaseResponse handleException(TechnicalException exception) {
 		return responseBuilder.baseResponse(exception);
 	}

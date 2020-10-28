@@ -1,14 +1,12 @@
 package com.wdf.location.convert;
 
 import com.wdf.location.constants.ApplicationConstants;
+import com.wdf.location.constants.RequestHeader;
 import com.wdf.location.datasource.model.Location;
 import com.wdf.location.request.AddRequest;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static com.wdf.location.datasource.LocationDBConstants.STATUS.ACTIVE;
 
@@ -17,20 +15,32 @@ public class AddConverter {
 
 	public Location convert(AddRequest request, Location parentLocation) {
 
-		// TODO You forgot to set the ID , ChangeID to UUID
 		Location location = new Location();
-		location.setLastUpdatedBy(request.getHeaders().get("X-User-ID"));
+		location.setCreatedBy(request.getHeaders().get(RequestHeader.USERID.getValue()));
 		location.setChildren(null);
 		location.setUid(UUID.randomUUID().toString());
 		location.setGeoLocation(request.getGeoLocation());
 		location.setImageUrl(request.getImageUrl());
-		location.setLastUpdatedBy(request.getHeaders().get("X-User-ID"));
-		location.setLevel(parentLocation.getLevel() + 1); // parent +1
+		location.setLastUpdatedBy(request.getHeaders().get(RequestHeader.USERID.getValue()));
 
-		Map<String, List<String>> map = ApplicationConstants.objectMapper.convertValue(parentLocation.getTags(),
-				HashMap.class);
-		map.get("tags").add(request.getName());
-		location.setTags(ApplicationConstants.objectMapper.convertValue(map, HashMap.class));
+		Map<String, List<String>> map = null;
+
+		if (request.getParent() != null) {
+			location.setLevel(parentLocation.getLevel() + 1); // parent +1
+
+			map = ApplicationConstants.objectMapper.convertValue(parentLocation.getTags(), HashMap.class);
+			map.get("tags").add(request.getName());
+			location.setTags(ApplicationConstants.objectMapper.convertValue(map, HashMap.class));
+		}
+		else {
+			map = new HashMap<>();
+			List<String> tags = new ArrayList<>();
+			tags.add(request.getName());
+			map.put("tags", tags);
+
+			location.setLevel(1);
+			location.setTags(ApplicationConstants.objectMapper.convertValue(map, HashMap.class));
+		}
 
 		location.setName(request.getName());
 		location.setParent(request.getParent());

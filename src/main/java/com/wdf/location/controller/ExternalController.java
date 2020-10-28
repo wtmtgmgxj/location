@@ -44,7 +44,8 @@ public class ExternalController {
 
 		request.setHeaders(headers);
 		request.setTracer(headers.get(USERID));
-		request.setRequestTimestamp(Long.valueOf(headers.get(DATE)));
+		request.setRequestTimestamp(
+				Long.valueOf(headers.get(com.wdf.location.constants.RequestHeader.DATE.getValue())));
 
 		validator.validate(request, headers, Flow.ADD);
 

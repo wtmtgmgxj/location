@@ -19,7 +19,7 @@ public class GetService extends BaseService {
 	@Autowired
 	private LocationDataService locationDataService;
 
-	public BaseResponse<GetResponse> get(final String id, String userId) {
+	public BaseResponse<GetResponse> get(String userId, String id) {
 
 		return createSuccessResponse(locationDataService.get(id, userId));
 	}

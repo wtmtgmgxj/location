@@ -7,6 +7,7 @@ import com.wdf.location.datasource.repository.master.LocationMasterRepository;
 import com.wdf.location.response.GetResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -50,14 +51,23 @@ public class LocationDataService {
 
 		List<String> ids = new ArrayList<>();
 		ids.add(location.getParent());
-		ids.addAll(ApplicationConstants.objectMapper.convertValue(location.getChildren().get("list"), List.class));
+		if (!ObjectUtils.isEmpty(location.getChildren()))
+			ids.addAll(ApplicationConstants.objectMapper.convertValue(location.getChildren().get("list"), List.class));
 
 		List<Location> locations = locationMasterRepository.findAllByUid(ids);
 
-		response.setParent(
-				locations.stream().filter(x -> x.getUid().equalsIgnoreCase(location.getParent())).findAny().get());
-		response.setChildren(locations.stream().filter(x -> !x.getUid().equalsIgnoreCase(location.getParent()))
-				.collect(Collectors.toList()));
+		if(!CollectionUtils.isEmpty(locations)){
+			if(location.getParent() != null) {
+				response.setParent(
+						locations.stream().filter(x -> x.getUid().equalsIgnoreCase(location.getParent())).findAny().get());
+				response.setChildren(locations.stream().filter(x -> !x.getUid().equalsIgnoreCase(location.getParent()))
+											  .collect(Collectors.toList()));
+			}
+			else{
+
+			}
+		}
+
 
 		return response;
 	}

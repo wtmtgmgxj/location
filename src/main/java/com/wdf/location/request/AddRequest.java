@@ -22,11 +22,6 @@ public class AddRequest extends BaseRequest {
 
 	private String imageUrl;
 
-	private String geoLocation; // nullable
-
-	// private int reportCount; // default 0;
-	// private JsonNode requests; // BOTH KEYS CAN BE PRESENT SIMULTANEOUSLY,
-	// UPDATE/REMOVAL
-	// or null
+	private String geoLocation;
 
 }

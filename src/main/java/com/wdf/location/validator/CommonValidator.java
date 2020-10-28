@@ -6,10 +6,8 @@ import com.wdf.location.exceptions.business.BusinessException;
 import com.wdf.location.request.AddRequest;
 import com.wdf.location.response.ResponseCodes;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -35,13 +33,13 @@ public class CommonValidator {
 			Arrays.stream(RequestHeader.values()).forEach(header -> {
 				if (StringUtils.isEmpty(headers.get(header.getValue()))) {
 					log.error("exception header not present: {}", header.getValue());
-					throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+					throw new BusinessException(ResponseCodes.HEADER_NOT_PRESENT);
 				}
 			});
 		}
 		catch (Exception e) {
 			log.error("exception", e);
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+			throw new BusinessException(ResponseCodes.HEADER_NOT_PRESENT);
 		}
 
 	}
