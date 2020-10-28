@@ -49,7 +49,7 @@ public class CommonValidator {
 		if (StringUtils.isEmpty(request.getName())) {
 			throw new BusinessException(ResponseCodes.BLANK_NAME);
 		}
-		if (!(StringUtils.isEmpty(request.getParent()) && request.getLevel() == 0)) {
+		if ((StringUtils.isEmpty(request.getParent()) && request.getLevel() == 0)) {
 			// not parent.
 			throw new BusinessException(ResponseCodes.INVALID_LEVEL_FOR_A_CHILD);
 		}

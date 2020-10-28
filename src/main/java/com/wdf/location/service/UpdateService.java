@@ -146,7 +146,9 @@ public class UpdateService extends BaseService<PostResponse> {
 		Location parentLocation = locationDataService.findByUid(location.getParent());
 		location.setStatus(INACTIVE.name());
 		locationsToBeSaved.add(location);
-		locationsToBeSaved.add(setChildren(parentLocation, location.getUid(), Flow.DELETE));
+
+		if (parentLocation != null)
+			locationsToBeSaved.add(setChildren(parentLocation, location.getUid(), Flow.DELETE));
 
 		locationsToBeSaved.stream().forEach(x -> x.setLastUpdatedBy(userID));
 

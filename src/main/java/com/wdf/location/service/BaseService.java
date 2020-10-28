@@ -5,6 +5,7 @@ import com.wdf.location.constants.Flow;
 import com.wdf.location.datasource.model.Location;
 import com.wdf.location.response.BaseResponse;
 import com.wdf.location.response.ResponseCodes;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,12 +24,20 @@ public abstract class BaseService<T> {
 	}
 
 	protected List<String> getChildren(Location parentLocation) {
-		return (List<String>) ApplicationConstants.objectMapper
-				.convertValue(parentLocation.getChildren(), HashMap.class).get("children");
+		Map childrenMap = ApplicationConstants.objectMapper.convertValue(parentLocation.getChildren(), HashMap.class);
+
+		if (CollectionUtils.isEmpty(childrenMap))
+			return null;
+		return (List<String>) childrenMap.get("children");
 	}
 
 	protected Location setChildren(Location parentLocation, String childUid, Flow flowtype) {
+
+		if (parentLocation == null)
+			return null;
+
 		List<String> children = getChildren(parentLocation);
+
 		if (Flow.ADD.equals(flowtype))
 			children.add(childUid);
 		if (Flow.DELETE.equals(flowtype))

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,8 +22,8 @@ public class LocationDataService {
 	@Autowired
 	private LocationMasterRepository locationMasterRepository;
 
-	public void save(Location location) {
-		locationMasterRepository.save(location);
+	public Location save(Location location) {
+		return locationMasterRepository.save(location);
 	}
 
 	public void saveAll(List<Location> locationList) {
@@ -51,11 +52,14 @@ public class LocationDataService {
 		response.setLocation(location);
 
 		List<String> ids = new ArrayList<>();
-		ids.add(location.getParent());
-		if (!ObjectUtils.isEmpty(location.getChildren()))
-			ids.addAll(ApplicationConstants.objectMapper.convertValue(location.getChildren().get("list"), List.class));
 
-		List<Location> locations = locationMasterRepository.findAllByUid(ids);
+		if (!StringUtils.isEmpty(location.getParent()))
+			ids.add(location.getParent());
+		if (!ObjectUtils.isEmpty(location.getChildren()))
+			ids.addAll(
+					ApplicationConstants.objectMapper.convertValue(location.getChildren().get("children"), List.class));
+
+		List<Location> locations = locationMasterRepository.findAllByUidIn(ids);
 
 		if (!CollectionUtils.isEmpty(locations)) {
 			if (location.getParent() != null) {
@@ -65,7 +69,7 @@ public class LocationDataService {
 						.collect(Collectors.toList()));
 			}
 			else {
-
+				response.setChildren(locations);
 			}
 		}
 
