@@ -123,6 +123,9 @@ public class UpdateService extends BaseService<PostResponse> {
 		List<Location> locationsToBeSaved = new ArrayList<>();
 		if (!StringUtils.isEmpty(newParentLocation)) {
 			Location oldParent = locationDataService.findByUid(childLocation.get().getParent());
+			// remove child's tags from old parent's tag
+			setTags(oldParent, childLocation, Flow.DELETE);
+
 			if (!ObjectUtils.isEmpty(oldParent)) {
 				locationsToBeSaved.add(setChildren(oldParent, childLocation.get().getUid(), Flow.DELETE));
 			}
@@ -130,6 +133,8 @@ public class UpdateService extends BaseService<PostResponse> {
 		childLocation.get().setParent(newParent);
 		childLocation.get().setLevel(newParentLocation.get().getLevel() + 1);
 		locationsToBeSaved.add(childLocation.get());
+		// add child's tags to new parent's tag
+		setTags(newParentLocation.get(), childLocation, Flow.ADD);
 		locationsToBeSaved.add(setChildren(newParentLocation.get(), childLocation.get().getUid(), Flow.ADD));
 		locationsToBeSaved.stream().forEach(x -> x.setLastUpdatedBy(userID));
 

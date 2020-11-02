@@ -36,20 +36,26 @@ public class AddService extends BaseService<PostResponse> {
 		}
 		else {
 
-			Location parentLocation = locationDataService.findByUid(request.getParent());
-			if (parentLocation == null)
-				throw new BusinessException(NO_PARENT_LOCATION_IN_DB);
+			Location parentLocation = null;
+			if (!ObjectUtils.isEmpty(request.getParent())) {
+				parentLocation = locationDataService.findByUid(request.getParent());
+				if (parentLocation == null)
+					throw new BusinessException(NO_PARENT_LOCATION_IN_DB);
 
-			Location location = locationDataService.save(addConverter.convert(request, parentLocation));
-			if (CollectionUtils.isEmpty(parentLocation.getChildren())) {
-				List<String> child = new ArrayList();
-				Map map = new HashMap<>();
-				map.put("children", child);
-				parentLocation.setChildren(map);
+				Location location = locationDataService.save(addConverter.convert(request, parentLocation));
+				if (CollectionUtils.isEmpty(parentLocation.getChildren())) {
+					List<String> child = new ArrayList();
+					Map map = new HashMap<>();
+					map.put("children", child);
+					parentLocation.setChildren(map);
+				}
+
+				((List<String>) parentLocation.getChildren().get("children")).add(location.getUid());
+				locationDataService.save(parentLocation);
 			}
-
-			((List<String>) parentLocation.getChildren().get("children")).add(location.getUid());
-			locationDataService.save(parentLocation);
+			else {
+				locationDataService.save(addConverter.convert(request, parentLocation));
+			}
 		}
 
 		return createSuccessResponse();
