@@ -179,6 +179,9 @@ public class UpdateService extends BaseService<PostResponse> {
 			String geoLocation, final String type) {
 		Location location = locationDataService.findByUid(id);
 
+		if (ObjectUtils.isEmpty(location))
+			throw new BusinessException(ResponseCodes.NO_LOCATION_IN_REQUEST);
+
 		if (!StringUtils.isEmpty(name)) {
 			location.setName(name);
 		}
@@ -203,6 +206,8 @@ public class UpdateService extends BaseService<PostResponse> {
 			}
 		}
 		location.setLastUpdatedBy(userID);
+		location.setReportCount(0);
+		location.setRequests(null);
 		locationDataService.save(location);
 		return createSuccessResponse();
 	}
