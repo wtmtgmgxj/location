@@ -16,7 +16,7 @@ https://docs.google.com/spreadsheets/d/1pFzA2T8l-VHn_huVJx-VbWXuwW7Pz_cwxLLp47wO
 ## Swagger
 - http://domain:port/swagger-ui.html
 ```shell script
-http://localhost:9000/swagger-ui.html
+http://localhost:9001/swagger-ui.html
 ```
 
 
